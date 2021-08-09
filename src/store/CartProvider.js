@@ -1,25 +1,10 @@
 import React, { useReducer } from "react";
 
 import CartContext from "./cart-context";
+import { reducer } from "./Reducer";
 const initialState = {
   items: [],
   totalAmount: 0,
-};
-const reducer = (state, action) => {
-  if (action.type === "ADD_ITEM") {
-    // return { ...state };
-    const updatedItems = state.items.concat(action.item);
-    const updatedAmount =
-      state.totalAmount + action.item.price * action.item.amount;
-    return {
-      items: updatedItems,
-      totalAmount: updatedAmount,
-    };
-  }
-  if (action.type === "REMOVE") {
-    return { ...state };
-  }
-  return state;
 };
 
 const CartProvider = ({ children }) => {
