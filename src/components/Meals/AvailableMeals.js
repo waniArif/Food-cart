@@ -5,42 +5,20 @@ import Card from "../UI/Card";
 import styles from "./AvailableMeals.module.css";
 import MealItem from "./MealItem";
 
-// data
-
-// const DUMMY_MEALS = [
-//   {
-//     id: "m1",
-//     name: "Sushi",
-//     description: "Finest fish and veggies",
-//     price: 22.99,
-//   },
-//   {
-//     id: "m2",
-//     name: "Schnitzel",
-//     description: "A german specialty!",
-//     price: 16.5,
-//   },
-//   {
-//     id: "m3",
-//     name: "Barbecue Burger",
-//     description: "American, raw, meaty",
-//     price: 12.99,
-//   },
-//   {
-//     id: "m4",
-//     name: "Green Bowl",
-//     description: "Healthy...and green...",
-//     price: 18.99,
-//   },
-// ];
-
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(null);
+
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
         "https://food-cart-5bfac-default-rtdb.firebaseio.com/meals.json"
       );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
       const data = await response.json();
       const loadedMeals = [];
       for (const key in data) {
@@ -53,10 +31,30 @@ const AvailableMeals = () => {
       }
 
       setMeals(loadedMeals);
+      setIsLoading(false);
     };
 
-    fetchMeals();
+    fetchMeals().catch((err) => {
+      setIsLoading(false);
+      setIsError(err.message);
+    });
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className={styles.loading}>
+        <p>Loading.......</p>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className={styles.mealsError}>
+        <p>{isError}</p>
+      </section>
+    );
+  }
   const mealsList = meals.map((meal) => <MealItem key={meal.id} {...meal} />);
   return (
     <section className={styles.meals}>
