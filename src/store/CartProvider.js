@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
 
 import CartContext from "./cart-context";
-import { reducer } from "./Reducer";
+import { reducer } from "./reducer";
 const initialState = {
   items: [],
   totalAmount: 0,
